@@ -1,0 +1,41 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual environment
+.webhook/
+venv/
+env/
+
+# Python environment files
+.env
+*.env
+env.txt
+
+# pytest
+.pytest_cache/
+app/__pycache__/
+app/.pytest_cache/
+
+# Celery
+celerybeat-schedule*
+*.log
+
+# VS Code settings
+.vscode/
+
+# Mac OS / Windows
+.DS_Store
+Thumbs.db
+
+# Docker
+*.pid
+*.bak
+
+# Ignore compiled DB files or SQLite if any
+*.db
+*.sqlite3
