@@ -11,6 +11,7 @@ from app.delivery_tasks import deliver_webhook
 from app.schemas import DeliveryStatusResponse, DeliveryLogResponse
 from app.cache import get_cached_subscription, cache_subscription
 from app.cache import r
+from uuid import uuid4
 
 router = APIRouter()
 
@@ -68,15 +69,20 @@ async def ingest_webhook(subscription_id: str, request: Request, db: Session = D
         subscription_data = {"target_url": subscription.target_url, "secret": subscription.secret}
 
     payload_dict = await request.json()
+    delivery_id = str(uuid4())
 
     deliver_webhook.delay(
         subscription_id=subscription_id,
         payload=payload_dict,
         target_url=subscription_data["target_url"],
-        secret=subscription_data["secret"]
+        secret=subscription_data["secret"],
+        delivery_id=delivery_id
     )
 
-    return {"message": "Accepted for asynchronous processing"}
+    return {
+        "message": f"Accepted for asynchronous processing. Note this delivery_id to query delivery status.",
+        "delivery_id": delivery_id
+    }
     
 
 @router.get("/delivery-status/{delivery_id}", response_model=DeliveryStatusResponse)
