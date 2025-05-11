@@ -73,7 +73,7 @@ docker-compose down -v
 ---
 
 ## API Usage Examples
-- *refer to-* https://newshub-c5r7.onrender.com](https://webhook-delivery.onrender.com/docs
+- *refer to-* [https://webhook-delivery.onrender.com/docs]
 
 ---
 
@@ -98,21 +98,18 @@ docker-compose down -v
 - Docker Compose enables simple, isolated local development.
 
 - Architecture Choices Explained
-🔧 Framework: FastAPI
+  - Framework: FastAPI
 Fast performance with async support
 Built-in OpenAPI/Swagger for easy testing
 Clean dependency injection system
-
-🧱 Database: PostgreSQL (on Render)
+  - Database: PostgreSQL (on Render)
 Strong consistency and relational integrity
 Delivery logs, subscriptions, and retry tracking require structured schema
-
-🔁 Async Queue: Celery + Redis (Upstash)
+  - Async Queue: Celery + Redis (Upstash)
 Celery workers process webhook deliveries in the background
 Redis serves as both broker and cache
 Celery Beat schedules cleanup tasks (e.g., log retention)
-
-🔁 Retry Strategy
+  - Retry Strategy
 Max 5 retries per delivery
 Exponential backoff: 10s → 30s → 1m → 5m → 15m
 Failures logged with error reasons
