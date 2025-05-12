@@ -71,13 +71,13 @@ async def ingest_webhook(subscription_id: str, request: Request, db: Session = D
     payload_dict = await request.json()
     delivery_id = str(uuid4())
 
-    deliver_webhook.delay(
-        subscription_id=subscription_id,
-        payload=payload_dict,
-        target_url=subscription_data["target_url"],
-        secret=subscription_data["secret"],
-        delivery_id=delivery_id
-    )
+    deliver_webhook.apply_async(kwargs={
+        "subscription_id": subscription_id,
+        "payload": payload_dict,
+        "target_url": subscription_data["target_url"],
+        "secret": subscription_data["secret"],
+        "delivery_id": delivery_id
+    })
 
     return {
         "message": f"Accepted for asynchronous processing. Note this delivery_id to query delivery status.",
