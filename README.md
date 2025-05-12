@@ -2,7 +2,7 @@
 
 A robust backend system for managing webhook subscriptions, ingesting and delivering webhooks asynchronously with retries, signature verification, logging, caching, and status tracking.
 
-#### 🌐 Live Demo - [Backend Service]([https://newshub-c5r7.onrender.com](https://webhook-delivery.onrender.com/docs))
+#### 🌐 Live Demo - [Backend Service](https://webhook-delivery.onrender.com/docs)
 
 ---
 
@@ -49,10 +49,9 @@ pip install -r requirements.txt
 DATABASE_URL=(your_db_url)
 REDIS_URL=(your_redis_url)
 ```
-
 #### Docker Start Services:
 ```
-docker-compose up build 
+docker-compose up --build 
 ```
 #### Docker Stop Services:
 ```
@@ -74,46 +73,49 @@ docker-compose down -v
 
 ## API Usage Examples
 - *refer to-* [https://webhook-delivery.onrender.com/docs]
-
----
-
-## Signature Verification
-- If a secret is set for a subscription:
-  - The service includes X-Hub-Signature-256: sha256=... in the outbound request.
-  - Incoming payloads (for verification-enabled subscriptions) are rejected with 401 Unauthorized if signature mismatch occurs.
-
----
-
-## Log Retention
-- Delivery logs are stored for 72 hours.
-- A periodic task via Celery Beat cleans up old logs automatically.
-
+- #### On Windows (cmd prompt)
+  - POST target_url and secret_key -> returns subscription_id
+  ```
+  curl -X POST https://webhook-delivery.onrender.com/subscriptions/ -H "Content-Type: application/json" -d "{ \"target_url\": \"https://webhook.site/81ac3c91-dca3-46ed-aa17-191b2ff689f4\", \"secret\": \"secretkey1\" }"
+  ```
+  - Verify Subscription ID 
+  ```
+  curl -X GET https://webhook-delivery.onrender.com/subscriptions/a2fede6b-2eb6-4336-bb1a-3c7e0d2d0e3b
+  ```
+  - POST Payload to Subscription ID -> returns delivery_id
+  ```
+  curl -X POST https://webhook-delivery.onrender.com/ingest/a2fede6b-2eb6-4336-bb1a-3c7e0d2d0e3b -H "Content-Type: application/json" -d "{ \"event\": \"sent_payload\", \"user_id\": 1 }"
+  ```
+  - GET delivery-status
+  ```
+  curl -X GET https://webhook-delivery.onrender.com/subscription/a2fede6b-2eb6-4336-bb1a-3c7e0d2d0e3b/recent-deliveries
+  ```
+  - Check cached subscription
+  ```
+  curl -X GET https://webhook-delivery.onrender.com/cache/a2fede6b-2eb6-4336-bb1a-3c7e0d2d0e3b
+  ```
 ---
 
 ## Architecture Highlights
-- FastAPI was chosen for high performance and async capability.
-- Celery for background job processing and retries.
-- Upstash Redis is used for both caching and message brokering (serverless, low-latency).
-- PostgreSQL via Render for reliability and relational consistency.
-- Docker Compose enables simple, isolated local development.
-
-- Architecture Choices Explained
   - Framework: FastAPI
-Fast performance with async support
-Built-in OpenAPI/Swagger for easy testing
-Clean dependency injection system
+    - Fast performance with async support
+    - Built-in OpenAPI/Swagger for easy testing
+    - Clean dependency injection system
   - Database: PostgreSQL (on Render)
-Strong consistency and relational integrity
-Delivery logs, subscriptions, and retry tracking require structured schema
+    - Strong consistency and relational integrity
+    - Delivery logs, subscriptions, and retry tracking require structured schema
   - Async Queue: Celery + Redis (Upstash)
-Celery workers process webhook deliveries in the background
-Redis serves as both broker and cache
-Celery Beat schedules cleanup tasks (e.g., log retention)
+    - Celery workers process webhook deliveries in the background
+    - Redis serves as both broker and cache
+    - Celery Beat schedules cleanup tasks (e.g., log retention)
   - Retry Strategy
-Max 5 retries per delivery
-Exponential backoff: 10s → 30s → 1m → 5m → 15m
-Failures logged with error reasons
-
+    - Max 5 retries per delivery
+    - Exponential backoff: 10s → 30s → 1m → 5m → 15m
+    - Failures logged with error reasons
+  - Others
+    - Signature Verification: The service includes X-Hub-Signature-256: sha256=... in the outbound request.
+    - Log Retention: A periodic task via Celery Beat cleans up old logs automatically (stored for 72hrs).
+    
 ---
 
 ## Assumptions
@@ -124,4 +126,10 @@ Failures logged with error reasons
 ---
 
 ## Estimated Monthly Cost (Free Tier)
-
+  | Service         | Provider | Usage Assumption                        | Estimated Monthly Cost     |
+  | --------------- | -------- | --------------------------------------- | -------------------------- |
+  | Redis (Upstash) | Upstash  | 5000 webhooks/day → \~6000 requests/day | \~\$1 (within free limits) |
+  | PostgreSQL      | Render   | \~150k delivery log rows/month          | Free (Starter tier)        |
+  | App Hosting     | Render   | 24x7 Uvicorn on Render                  | Free (Web Services)        |
+ 
+  Total: ≈ $1/month
