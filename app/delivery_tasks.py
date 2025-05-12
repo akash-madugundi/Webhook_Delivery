@@ -11,7 +11,7 @@ from app.models import Subscription, DeliveryLog
 from app.celery_worker import celery_app
 
 @celery_app.task(bind=True, max_retries=5)
-def deliver_webhook(self, subscription_id: str, payload: dict, target_url: str, secret: str, delivery_id: str = None):
+def deliver_webhook(self, subscription_id: str, payload: dict, target_url: str, secret: str, delivery_id: str):
     db: Session = SessionLocal()
     attempt_number = self.request.retries + 1
     delivery_id = delivery_id or str(uuid.uuid4())
