@@ -46,8 +46,8 @@ pip install -r requirements.txt
 ```
 #### Set up environment variables (.env file):
 ```bash
-DATABASE_URL=(your_db_url)
-REDIS_URL=(your_redis_url)
+DATABASE_URL = postgresql://webhook_delivery_db_user:I7VtJP9zpsvcos4EvVQjxpcLv9QJoi14@dpg-d0g70ii4d50c73fhd7k0-a.oregon-postgres.render.com/webhook_delivery_db
+REDIS_URL=rediss://:AT31AAIjcDEyNzliYzM3NWE5MmE0MWFkYTdhOTgxYzlmOGUxNmViN3AxMA@solid-baboon-15861.upstash.io
 ```
 #### Docker Start Services:
 ```
