@@ -94,6 +94,13 @@ docker-compose down -v
   ```
   curl -X GET https://webhook-delivery.onrender.com/cache/a2fede6b-2eb6-4336-bb1a-3c7e0d2d0e3b
   ```
+   - To check Delivery Logs (and other DB contents)
+  ```
+  psql installed and added to PATH
+  psql postgresql://webhook_delivery_db_user:I7VtJP9zpsvcos4EvVQjxpcLv9QJoi14@dpg-d0g70ii4d50c73fhd7k0-a.oregon-postgres.render.com/webhook_delivery_db
+  \dt
+  select * from delivery_logs;
+  ```
 ---
 
 ## Architecture Highlights
