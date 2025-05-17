@@ -88,6 +88,10 @@ docker-compose down -v
   ```
   - GET delivery-status
   ```
+  curl -X GET https://webhook-delivery.onrender.com/delivery-status/{delivery_id}
+  ```
+  - GET recent deliveries
+  ```
   curl -X GET https://webhook-delivery.onrender.com/subscription/a2fede6b-2eb6-4336-bb1a-3c7e0d2d0e3b/recent-deliveries
   ```
   - Check cached subscription
