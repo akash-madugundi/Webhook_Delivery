@@ -41,7 +41,7 @@ python -m venv .webhook
 source .webhook/bin/activate  # On Unix/Mac
 ```
 #### Docker Start Services:
-- Run the Docker
+- Ensure Docker Engine is Running, then-
 ```
 docker-compose up --build 
 ```
@@ -68,7 +68,7 @@ docker-compose down -v
 - #### On Windows *(In Cmd Prompt)*
   - POST target_url and secret_key -> returns subscription_id
   ```
-  curl -X POST http://localhost:8000/subscriptions/ -H "Content-Type: application/json" -d "{ \"target_url\": \"https://webhook.site/81ac3c91-dca3-46ed-aa17-191b2ff689f4\", \"secret\": \"secretkey1\" }"
+  curl -X POST http://localhost:8000/subscriptions/ -H "Content-Type: application/json" -d "{ \"target_url\": \"https://webhook.site/a1c44c41-6367-4e5f-86f0-f18ea75cecb8\", \"secret\": \"secretkey1\" }"
   ```
   - Verify Subscription ID 
   ```
@@ -84,7 +84,7 @@ docker-compose down -v
   ```
   - GET recent deliveries
   ```
-  curl -X GET http://localhost:8000/subscription/{{subscription_id}}/recent-deliveries
+  curl -X GET http://localhost:8000/subscription/{subscription_id}/recent-deliveries
   ```
   - Check cached subscription
   ```
@@ -113,7 +113,8 @@ docker-compose down -v
   GET subscription:{subscription_id}
   ```
 
-  > **Note:** To Test Endpoints on Deployed Link, replace `http://localhost:8000` with `https://webhook-delivery.onrender.com`
+  > **Note_1:** To Test Endpoints on Deployed Link- replace `http://localhost:8000` with `https://webhook-delivery.onrender.com` <br>
+  > **Note_2:** Postman can also be used for testing, as it provides a better GUI.
 
 ---
 

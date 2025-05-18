@@ -44,6 +44,7 @@ def deliver_webhook(self, subscription_id: str, payload: dict, target_url: str, 
         )
         db.add(log)
         db.commit()
+        print("************Added to Delivery Log*************************")
 
         if not success:
             raise requests.RequestException(f"Non-2xx status: {response.status_code} - {response.text}")
