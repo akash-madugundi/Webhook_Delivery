@@ -33,13 +33,6 @@ A robust backend system for managing webhook subscriptions, ingesting and delive
 git clone <repository-url>
 cd Webhook_Delivery
 ```
-#### Create a Virtual Environment
-```bash
-python -m venv .webhook
-.webhook\Scripts\activate  # On Windows
-# OR
-source .webhook/bin/activate  # On Unix/Mac
-```
 #### Docker Start Services:
 - Ensure Docker Engine is Running, then-
 ```
