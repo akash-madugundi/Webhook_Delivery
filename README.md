@@ -40,16 +40,8 @@ python -m venv .webhook
 # OR
 source .webhook/bin/activate  # On Unix/Mac
 ```
-#### Install requirements:
-```
-pip install -r requirements.txt
-```
-#### Set up environment variables (.env file):
-```bash
-DATABASE_URL = postgresql://webhook_delivery_db_user:I7VtJP9zpsvcos4EvVQjxpcLv9QJoi14@dpg-d0g70ii4d50c73fhd7k0-a.oregon-postgres.render.com/webhook_delivery_db
-REDIS_URL=rediss://:AT31AAIjcDEyNzliYzM3NWE5MmE0MWFkYTdhOTgxYzlmOGUxNmViN3AxMA@solid-baboon-15861.upstash.io
-```
 #### Docker Start Services:
+- Run the Docker
 ```
 docker-compose up --build 
 ```
@@ -73,38 +65,56 @@ docker-compose down -v
 
 ## API Usage Examples
 - *refer to-* [https://webhook-delivery.onrender.com/docs]
-- #### On Windows (cmd prompt)
+- #### On Windows *(In Cmd Prompt)*
   - POST target_url and secret_key -> returns subscription_id
   ```
-  curl -X POST https://webhook-delivery.onrender.com/subscriptions/ -H "Content-Type: application/json" -d "{ \"target_url\": \"https://webhook.site/81ac3c91-dca3-46ed-aa17-191b2ff689f4\", \"secret\": \"secretkey1\" }"
+  curl -X POST http://localhost:8000/subscriptions/ -H "Content-Type: application/json" -d "{ \"target_url\": \"https://webhook.site/81ac3c91-dca3-46ed-aa17-191b2ff689f4\", \"secret\": \"secretkey1\" }"
   ```
   - Verify Subscription ID 
   ```
-  curl -X GET https://webhook-delivery.onrender.com/subscriptions/a2fede6b-2eb6-4336-bb1a-3c7e0d2d0e3b
+  curl -X GET http://localhost:8000/subscriptions/{subscription_id}
   ```
   - POST Payload to Subscription ID -> returns delivery_id
   ```
-  curl -X POST https://webhook-delivery.onrender.com/ingest/a2fede6b-2eb6-4336-bb1a-3c7e0d2d0e3b -H "Content-Type: application/json" -d "{ \"event\": \"sent_payload\", \"user_id\": 1 }"
+  curl -X POST http://localhost:8000/ingest/{subscription_id} -H "Content-Type: application/json" -d "{ \"event\": \"sent_payload\", \"user_id\": 1 }"
   ```
   - GET delivery-status
   ```
-  curl -X GET https://webhook-delivery.onrender.com/delivery-status/{delivery_id}
+  curl -X GET http://localhost:8000/delivery-status/{delivery_id}
   ```
   - GET recent deliveries
   ```
-  curl -X GET https://webhook-delivery.onrender.com/subscription/a2fede6b-2eb6-4336-bb1a-3c7e0d2d0e3b/recent-deliveries
+  curl -X GET http://localhost:8000/subscription/{{subscription_id}}/recent-deliveries
   ```
   - Check cached subscription
   ```
-  curl -X GET https://webhook-delivery.onrender.com/cache/a2fede6b-2eb6-4336-bb1a-3c7e0d2d0e3b
+  curl -X GET http://localhost:8000/cache/{subscription_id}
   ```
-   - To check Delivery Logs (and other DB contents)
+  - To check Delivery Logs and other DB contents
   ```
+  # Locally:
+  Ensure Docker is running
+  docker exec -it webhook_db psql -U postgres -d Webhook
+  \dt
+  SELECT * FROM delivery_logs;
+
+  # On Deployed:
   psql installed and added to PATH
   psql postgresql://webhook_delivery_db_user:I7VtJP9zpsvcos4EvVQjxpcLv9QJoi14@dpg-d0g70ii4d50c73fhd7k0-a.oregon-postgres.render.com/webhook_delivery_db
   \dt
-  select * from delivery_logs;
+  SELECT * FROM delivery_logs;
   ```
+  - To Check Cache
+  ```
+  # Locally:
+  Ensure Docker is running
+  docker exec -it redis-server redis-cli
+  SELECT 2
+  GET subscription:{subscription_id}
+  ```
+
+  > **Note:** To Test Endpoints on Deployed Link, replace `http://localhost:8000` with `https://webhook-delivery.onrender.com`
+
 ---
 
 ## Architecture Highlights

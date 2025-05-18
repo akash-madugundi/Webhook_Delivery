@@ -12,8 +12,6 @@ venv/
 env/
 
 # Python environment files
-.env
-*.env
 env.txt
 
 # pytest

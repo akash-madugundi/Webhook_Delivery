@@ -46,6 +46,20 @@ services:
     ports:
       - "6379:6379"
 
+  #! For Deployment
+  # db:
+  #   image: postgres:14
+  #   container_name: webhook_db
+  #   restart: always
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: datahack
+  #     POSTGRES_DB: Webhook
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - pgdata:/var/lib/postgresql/data
+
   db:
     image: postgres:14
     container_name: webhook_db
