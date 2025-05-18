@@ -1,6 +1,4 @@
 # --- docker-compose.yml ---
-version: "3.9"
-
 services:
   web:
     build: .
@@ -19,7 +17,7 @@ services:
   celery_worker:
     build: .
     container_name: webhook_worker
-    command: ["./wait-for-redis.sh", "celery", "-A", "app.celery_worker.celery_app", "worker", "--loglevel=info", "--pool=solo"]
+    command: /bin/sh -c "dos2unix wait-for-redis.sh && chmod +x wait-for-redis.sh && ./wait-for-redis.sh celery -A app.celery_worker.celery_app worker --loglevel=info --pool=solo"
     volumes:
       - .:/app
     env_file:
@@ -31,7 +29,7 @@ services:
   celery_beat:
     build: .
     container_name: webhook_beat
-    command: ["./wait-for-redis.sh", "celery", "-A", "app.celery_worker.celery_app", "beat", "--loglevel=info"]
+    command: /bin/sh -c "dos2unix wait-for-redis.sh && chmod +x wait-for-redis.sh && ./wait-for-redis.sh celery -A app.celery_worker.celery_app beat --loglevel=info"
     volumes:
       - .:/app
     env_file:

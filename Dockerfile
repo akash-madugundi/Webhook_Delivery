@@ -10,7 +10,7 @@ WORKDIR /app
 
 # Install system dependencies (fixed netcat package)
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc libpq-dev netcat-openbsd && \
+    apt-get install -y --no-install-recommends gcc libpq-dev netcat-openbsd dos2unix && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
@@ -19,6 +19,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy project files
 COPY . .
+RUN chmod +x wait-for-redis.sh
+RUN dos2unix wait-for-redis.sh
 
 # Default command
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
